@@ -53,15 +53,15 @@ namespace APIMaisEventos
                     }
                 });
 
-                services.AddDbContext<MaisEventosContext>( options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))
-                );
-
                 //Adicionar configurações extras da documentação, para ler os XMLs
                 var xmlArquivo = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlArquivo));
 
             });
+
+            services.AddDbContext<MaisEventosContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))
+            );
 
             services.AddAuthentication(options =>
             {
