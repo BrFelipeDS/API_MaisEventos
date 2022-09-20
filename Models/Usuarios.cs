@@ -9,14 +9,14 @@ namespace APIMaisEventos.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Nome é obrigatório")]
+        [Required]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "Email é obrigatório")]
-        [RegularExpression(".+\\@.+\\..+", ErrorMessage = "Informe um email válido")]
+        [Required]
+        //[RegularExpression(".+\\@.+\\..+", ErrorMessage = "Informe um email válido")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Senha é obrigatória")]
+        [Required]
         [MinLength(8)]
         public string Senha { get; set; }
 

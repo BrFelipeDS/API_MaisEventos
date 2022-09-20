@@ -8,9 +8,9 @@ namespace APIMaisEventos.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Nome da categoria é obrigatória")]
+        [Required]
         public string Categoria { get; set; }
 
-        public ICollection<Eventos> _Eventos { get; set; }
+        public ICollection<Eventos> Eventos { get; set; }
     }
 }

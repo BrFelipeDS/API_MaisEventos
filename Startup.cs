@@ -1,7 +1,9 @@
+using APIMaisEventos.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -50,6 +52,10 @@ namespace APIMaisEventos
                         Url = new Uri("https://site.com")
                     }
                 });
+
+                services.AddDbContext<MaisEventosContext>( options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))
+                );
 
                 //Adicionar configurações extras da documentação, para ler os XMLs
                 var xmlArquivo = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
