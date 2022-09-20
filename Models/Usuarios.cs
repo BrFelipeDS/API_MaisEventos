@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace APIMaisEventos.Models
 {
     public class Usuarios
     {
+        [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Nome é obrigatório")]
@@ -19,5 +22,7 @@ namespace APIMaisEventos.Models
 
 
         public string Imagem { get; set; }
+
+        public ICollection<UsuarioEvento> UsuarioEventos { get; set; }
     }
 }
