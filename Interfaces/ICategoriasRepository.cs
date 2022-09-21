@@ -1,4 +1,5 @@
 ﻿using APIMaisEventos.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System.Collections.Generic;
 
 namespace APIMaisEventos.Interfaces
@@ -15,9 +16,11 @@ namespace APIMaisEventos.Interfaces
         Categorias Insert(Categorias categoria);
 
         // Update
-        Categorias Update(int id, Categorias categoria);
+        void Update(Categorias categoria);
 
         // Delete
-        bool Delete(int id);
+        void Delete(Categorias categoria);
+
+        void UpdateParcial(JsonPatchDocument patch, Categorias categoria);
     }
 }

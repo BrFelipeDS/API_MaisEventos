@@ -3,144 +3,60 @@ using APIMaisEventos.Models;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
+using APIMaisEventos.Contexts;
+using System.Linq;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace APIMaisEventos.Repositories
 {
     public class CategoriasRepository : ICategoriasRepository
     {
-        readonly string connectionString = "Data Source = NB033786\\SQLEXPRESS2;Integrated Security = true;Initial Catalog = MaisEventos;";
+        MaisEventosContext ctx;
 
-        public bool Delete(int id)
+        public CategoriasRepository(MaisEventosContext _ctx)
         {
-            using (SqlConnection conexao = new SqlConnection(connectionString))
-            {
-                conexao.Open();
+            ctx = _ctx;
+        }
 
-                string script = "DELETE FROM Categorias WHERE Id=@id";
-
-                // Criamos um comando de execução no banco
-                using (SqlCommand cmd = new SqlCommand(script, conexao))
-                {
-                    // Fazemos as declarações das variáveis por parâmetro
-                    cmd.Parameters.Add("@id", System.Data.SqlDbType.Int).Value = id;
-
-                    cmd.CommandType = CommandType.Text;
-                    int linhasAfetadas = cmd.ExecuteNonQuery();
-                    if (linhasAfetadas == 0)
-                    {
-                        return false;
-                    }
-
-                    return true;
-                }
-            }
-
+        public void Delete(Categorias categoria)
+        {
+            ctx.Categorias.Remove(categoria);
+            ctx.SaveChanges();
         }
 
         public ICollection<Categorias> GetAll()
         {
-            var categorias = new List<Categorias>();
-
-            using (SqlConnection conexao = new SqlConnection(connectionString))
-            {
-                conexao.Open();
-
-                string consulta = "SELECT * FROM Categorias";
-
-                using (SqlCommand cmd = new SqlCommand(consulta, conexao))
-                {
-                    // Ler todos os itens da consulta
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            categorias.Add(new Categorias
-                            {
-                                Id = (int)reader[0],
-                                Categoria = (string)reader[1]                                
-                            });
-                        }
-                    }
-                }
-            }
-
+            var categorias = ctx.Categorias.ToList();
             return categorias;
         }
 
         public Categorias GetById(int id)
         {
-            var categoria = new Categorias();
+            var categorias = ctx.Categorias.Find(id);                
+                //.FirstOrDefault(p => p.Id == id);
 
-            using (SqlConnection conexao = new SqlConnection(connectionString))
-            {
-                conexao.Open();
-
-                string consulta = "SELECT * FROM Categorias WHERE Id=@id";
-
-                using (SqlCommand cmd = new SqlCommand(consulta, conexao))
-                {
-                    cmd.Parameters.Add("@id", System.Data.SqlDbType.Int).Value = id;
-
-                    // Ler todos os itens da consulta
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            categoria.Id = (int)reader[0];
-                            categoria.Categoria = (string)reader[1]; 
-                        }
-                    }
-                }
-            }
-
-            return categoria;
+            return categorias;
         }
 
         public Categorias Insert(Categorias categoria)
         {
-            using (SqlConnection conexao = new SqlConnection(connectionString))
-            {
-                // Abre uma conexão
-                conexao.Open();
-
-                string script = "INSERT INTO Categorias (Categoria) VALUES (@Categoria)";
-
-                // Criamos um comando de execução no banco
-                using (SqlCommand cmd = new SqlCommand(script, conexao))
-                {
-                    // Fazemos as declarações das variáveis por parâmetro
-                    cmd.Parameters.Add("@Categoria", System.Data.SqlDbType.NVarChar).Value = categoria.Categoria;                   
-
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
-                }
-            }
-
+            ctx.Categorias.Add(categoria);
+            ctx.SaveChanges();
             return categoria;
         }
 
-        public Categorias Update(int id, Categorias categoria)
+        public void Update(Categorias categoria)
         {
-            using (SqlConnection conexao = new SqlConnection(connectionString))
-            {
-                conexao.Open();
+            ctx.Entry(categoria).State = EntityState.Modified;
+            ctx.SaveChanges();
+        }
 
-                string script = "UPDATE Categorias SET Categoria=@Categoria WHERE Id=@id";
-
-                // Criamos um comando de execução no banco
-                using (SqlCommand cmd = new SqlCommand(script, conexao))
-                {
-                    // Fazemos as declarações das variáveis por parâmetro
-                    cmd.Parameters.Add("@id", System.Data.SqlDbType.Int).Value = id;
-                    cmd.Parameters.Add("@Categoria", System.Data.SqlDbType.NVarChar).Value = categoria.Categoria;
-                    
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
-                    categoria.Id = id;
-                }
-            }
-
-            return categoria;
+        public void UpdateParcial(JsonPatchDocument patch, Categorias categoria)
+        {
+            patch.ApplyTo(categoria);
+            ctx.Entry(categoria).State = EntityState.Modified;
+            ctx.SaveChanges();
         }
     }
 }

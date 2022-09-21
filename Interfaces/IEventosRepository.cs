@@ -1,4 +1,5 @@
 ﻿using APIMaisEventos.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -17,9 +18,11 @@ namespace APIMaisEventos.Interfaces
         Eventos Insert(Eventos evento);
 
         // Update
-        Eventos Update(int id, Eventos evento);
+        void Update(Eventos evento);
         
         // Delete
-        bool Delete(int id);
+        void Delete(Eventos evento);
+
+        void UpdateParcial(JsonPatchDocument patch, Eventos evento);
     }
 }
