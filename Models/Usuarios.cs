@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APIMaisEventos.Models
 {
@@ -23,6 +24,7 @@ namespace APIMaisEventos.Models
 
         public string Imagem { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ICollection<UsuarioEvento> UsuarioEventos { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 using APIMaisEventos.Contexts;
+using APIMaisEventos.Interfaces;
+using APIMaisEventos.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,7 +34,7 @@ namespace APIMaisEventos
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -58,6 +60,12 @@ namespace APIMaisEventos
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlArquivo));
 
             });
+
+            services.AddTransient<MaisEventosContext, MaisEventosContext>();
+            services.AddTransient<IUsuarioRepository, UsuarioRepository>();
+            services.AddTransient<ICategoriasRepository, CategoriasRepository>();
+            services.AddTransient<IUsuarioEventoRepository, UsuarioEventoRepository>();
+            services.AddTransient<IEventosRepository, EventosRepository>();
 
             services.AddDbContext<MaisEventosContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))

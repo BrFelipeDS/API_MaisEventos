@@ -4,35 +4,179 @@
         <name>APIMaisEventos</name>
     </assembly>
     <members>
+        <member name="M:APIMaisEventos.Controllers.CategoriasController.Cadastrar(APIMaisEventos.Models.Categorias)">
+            <summary>
+            Inserção de um objeto no banco de dados. MANTENHA O VALOR DE TODOS OS "Id" COMO "0"!
+            </summary>
+            <param name="categoria">Objeto completo a ser inserido</param>
+            <returns>Objeto inserido</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.CategoriasController.Listar">
+            <summary>
+            Lista todos os objetos presentes no banco de dados
+            </summary>
+            <returns>Lista de todos os objetos</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.CategoriasController.BuscarPorId(System.Int32)">
+            <summary>
+            Seleciona apenas 1 objeto com o Id especificado
+            </summary>
+            <param name="id">Id do objeto a ser selecionado</param>
+            <returns>Objeto com o Id inserido</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.CategoriasController.Alterar(System.Int32,APIMaisEventos.Models.Categorias)">
+            <summary>
+            Altera um objeto no banco de dados conforme o Id. ATENÇÃO: NO JSON, COLOQUE O VALOR DOS "Id" CONFORME SEUS VALORES NO BANCO DE DADOS!
+            </summary>
+            <param name="id">Id do objeto a ser alterado</param>
+            <param name="categoria">O objeto completado que substituirá o existente no banco de dados</param>
+            <returns>Objeto alterado</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.CategoriasController.AlterarParcialmente(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument)">
+            <summary>
+            Altera apenas informações específicas do objeto
+            </summary>
+            <param name="id">Id do objeto a ser alterado</param>
+            <param name="patch">Informações que serão alteradas no objeto destino</param>
+            <returns>Novo objeto com as alterações realizadas</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.CategoriasController.Deletar(System.Int32)">
+            <summary>
+            Deleta um objeto do banco de dados de acordo com o id informado
+            </summary>
+            <param name="id">Id do objeto a ser deletado</param>
+            <returns></returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.EventosController.Cadastrar(APIMaisEventos.Models.Eventos)">
+            <summary>
+            Inserção de um objeto no banco de dados. MANTENHA O VALOR DE TODOS OS "Id" COMO "0"!
+            </summary>
+            <param name="evento">Objeto completo a ser inserido</param>
+            <returns>Objeto inserido</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.EventosController.Listar">
+            <summary>
+            Lista todos os objetos presentes no banco de dados
+            </summary>
+            <returns>Lista de todos os objetos</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.EventosController.BuscarPorId(System.Int32)">
+            <summary>
+            Seleciona apenas 1 objeto com o Id especificado
+            </summary>
+            <param name="id">Id do objeto a ser selecionado</param>
+            <returns>Objeto com o Id inserido</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.EventosController.Alterar(System.Int32,APIMaisEventos.Models.Eventos)">
+            <summary>
+            Altera um objeto no banco de dados conforme o Id. ATENÇÃO: NO JSON, COLOQUE O VALOR DOS "Id" CONFORME SEUS VALORES NO BANCO DE DADOS!
+            </summary>
+            <param name="id">Id do objeto a ser alterado</param>
+            <param name="evento">O objeto completado que substituirá o existente no banco de dados</param>
+            <returns>Objeto alterado</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.EventosController.AlterarParcialmente(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument)">
+            <summary>
+            Altera apenas informações específicas do objeto
+            </summary>
+            <param name="id">Id do objeto a ser alterado</param>
+            <param name="patch">Informações que serão alteradas no objeto destino</param>
+            <returns>Novo objeto com as alterações realizadas</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.EventosController.Deletar(System.Int32)">
+            <summary>
+            Deleta um objeto do banco de dados de acordo com o id informado
+            </summary>
+            <param name="id">Id do objeto a ser deletado</param>
+            <returns></returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.UsuarioEventoController.Cadastrar(APIMaisEventos.Models.UsuarioEvento)">
+            <summary>
+            Inserção de um objeto no banco de dados. MANTENHA O VALOR DE TODOS OS "Id" COMO "0"!
+            </summary>
+            <param name="usuarioEvento">Objeto completo a ser inserido</param>
+            <returns>Objeto inserido</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.UsuarioEventoController.Listar">
+            <summary>
+            Lista todos os objetos presentes no banco de dados
+            </summary>
+            <returns>Lista de todos os objetos</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.UsuarioEventoController.BuscarPorId(System.Int32)">
+            <summary>
+            Seleciona apenas 1 objeto com o Id especificado
+            </summary>
+            <param name="id">Id do objeto a ser selecionado</param>
+            <returns>Objeto com o Id inserido</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.UsuarioEventoController.Alterar(System.Int32,APIMaisEventos.Models.UsuarioEvento)">
+            <summary>
+            Altera um objeto no banco de dados conforme o Id. ATENÇÃO: NO JSON, COLOQUE O VALOR DOS "Id" CONFORME SEUS VALORES NO BANCO DE DADOS!
+            </summary>
+            <param name="id">Id do objeto a ser alterado</param>
+            <param name="usuarioEvento">O objeto completado que substituirá o existente no banco de dados</param>
+            <returns>Objeto alterado</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.UsuarioEventoController.AlterarParcialmente(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument)">
+            <summary>
+            Altera apenas informações específicas do objeto
+            </summary>
+            <param name="id">Id do objeto a ser alterado</param>
+            <param name="patch">Informações que serão alteradas no objeto destino</param>
+            <returns>Novo objeto com as alterações realizadas</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.UsuarioEventoController.Deletar(System.Int32)">
+            <summary>
+            Deleta um objeto do banco de dados de acordo com o id informado
+            </summary>
+            <param name="id">Id do objeto a ser deletado</param>
+            <returns></returns>
+        </member>
         <member name="M:APIMaisEventos.Controllers.UsuariosController.Cadastrar(APIMaisEventos.Models.Usuarios,Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
-            Cadastra usuários na aplicação
+            Inserção de um objeto no banco de dados. MANTENHA O VALOR DE TODOS OS "Id" COMO "0"!
             </summary>
-            <param name="usuario">Dados do usuário</param>
-            <param name="arquivo">Arquivo a ser subido</param>
-            <returns>Dados do usuário cadastrado</returns>
+            <param name="usuario">Objeto completo a ser inserido</param>
+            <param name="arquivo">Arquivo de imagem a ser postado</param>
+            <returns>Objeto inserido</returns>
         </member>
         <member name="M:APIMaisEventos.Controllers.UsuariosController.Listar">
             <summary>
-            Lista todos os usuário da apliacação
+            Lista todos os objetos presentes no banco de dados
             </summary>
-            <returns>Lista de usuários</returns>
+            <returns>Lista de todos os objetos</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.UsuariosController.BuscarPorId(System.Int32)">
+            <summary>
+            Seleciona apenas 1 objeto com o Id especificado
+            </summary>
+            <param name="id">Id do objeto a ser selecionado</param>
+            <returns>Objeto com o Id inserido</returns>
         </member>
         <member name="M:APIMaisEventos.Controllers.UsuariosController.Alterar(System.Int32,APIMaisEventos.Models.Usuarios,Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
-            Altera os dados de um usuário
+            Altera um objeto no banco de dados conforme o Id. ATENÇÃO: NO JSON, COLOQUE O VALOR DOS "Id" CONFORME SEUS VALORES NO BANCO DE DADOS!
             </summary>
-            <param name="id">Id do usuário</param>
-            <param name="usuario">Todas as informações do usuário</param>
-            <param name="arquivo">Arquivo anexado</param>
-            <returns>Usuário alterado</returns>
+            <param name="id">Id do objeto a ser alterado</param>
+            <param name="usuario">O objeto completado que substituirá o existente no banco de dados</param>
+            <param name="arquivo">Arquivo de imagem a ser alterado</param>
+            <returns>Objeto alterado</returns>
+        </member>
+        <member name="M:APIMaisEventos.Controllers.UsuariosController.AlterarParcialmente(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument)">
+            <summary>
+            Altera apenas informações específicas do objeto
+            </summary>
+            <param name="id">Id do objeto a ser alterado</param>
+            <param name="patch">Informações que serão alteradas no objeto destino</param>
+            <returns>Novo objeto com as alterações realizadas</returns>
         </member>
         <member name="M:APIMaisEventos.Controllers.UsuariosController.Deletar(System.Int32)">
             <summary>
-            Exclui um usuário da aplicação
+            Deleta um objeto do banco de dados de acordo com o id informado
             </summary>
-            <param name="id">Id do usuário</param>
-            <returns>Mensagem de exclusão</returns>
+            <param name="id">Id do objeto a ser deletado</param>
+            <returns></returns>
         </member>
     </members>
 </doc>

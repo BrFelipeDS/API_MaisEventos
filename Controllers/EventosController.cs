@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System;
+using Microsoft.AspNetCore.JsonPatch;
+using APIMaisEventos.Interfaces;
 
 namespace APIMaisEventos.Controllers
 {
@@ -11,180 +13,197 @@ namespace APIMaisEventos.Controllers
     [ApiController]
     public class EventosController : ControllerBase
     {
-        private EventosRepository repositorio = new EventosRepository();
+        private readonly IEventosRepository repositorio;
 
+        public EventosController(IEventosRepository _repositorio)
+        {
+            repositorio = _repositorio;
+        }
+
+        /// <summary>
+        /// Inserção de um objeto no banco de dados. MANTENHA O VALOR DE TODOS OS "Id" COMO "0"!
+        /// </summary>
+        /// <param name="evento">Objeto completo a ser inserido</param>
+        /// <returns>Objeto inserido</returns>
         [HttpPost]
-        public IActionResult Cadastrar([FromForm] Eventos evento)
+        public IActionResult Cadastrar(Eventos evento)
         {
             try
             {
-                var validarCategoria = repositorio.Insert(evento);
-
-                if (validarCategoria == null)
-                {
-                    return NotFound(new
-                    {
-                        msg = "Id de Categoria não encontrado"
-                    });
-                }
-
-                return Ok(evento);
-
+                var retorno = repositorio.Insert(evento);
+                return Ok(retorno);
             }
-            catch (InvalidOperationException ex)
+            catch (System.Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    msg = "Falha na conexão",
-                    erro = ex.Message,
+                    Error = "Falha na transação",
+                    Message = ex.Message
                 });
-            }
-            catch (SqlException ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na sintaxe do código SQL",
-                    erro = ex.Message,
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na definição do código",
-                    erro = ex.Message
-                });
+
             }
         }
 
+        /// <summary>
+        /// Lista todos os objetos presentes no banco de dados
+        /// </summary>
+        /// <returns>Lista de todos os objetos</returns>
         [HttpGet]
         public IActionResult Listar()
         {
             try
             {
-                var eventos = repositorio.GetAll();
-                return Ok(eventos);
+                var retorno = repositorio.GetAll();
+                return Ok(retorno);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "Falha na transação",
+                    Message = ex.Message
+                });
 
             }
-            catch (InvalidOperationException ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na conexão",
-                    erro = ex.Message,
-                });
-            }
-            catch (SqlException ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na sintaxe do código SQL",
-                    erro = ex.Message,
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na definição do código",
-                    erro = ex.Message
-                });
-            }
+
         }
 
-        [HttpPut]
-        public IActionResult Alterar(int id,[FromForm] Eventos evento)
+        /// <summary>
+        /// Seleciona apenas 1 objeto com o Id especificado
+        /// </summary>
+        /// <param name="id">Id do objeto a ser selecionado</param>
+        /// <returns>Objeto com o Id inserido</returns>
+        [HttpGet("{id}")]
+        public IActionResult BuscarPorId(int id)
         {
             try
             {
-                var buscarEvento = repositorio.GetById(id);
+                var retorno = repositorio.GetById(id);
 
-                if(buscarEvento == null)
+                if (retorno is null)
                 {
-                    return NotFound();
+                    return NotFound(new { Message = "Não foi encontrado um evento com esse Id." });
                 }
 
-
-                var eventoAlterado = repositorio.Update(id, evento);
-
-                if (eventoAlterado == null)
-                {
-                    return NotFound(new
-                    {
-                        msg = "Id de Categoria não encontrado"
-                    });
-                }
-                return Ok(evento);
-
+                return Ok(retorno);
             }
-            catch (InvalidOperationException ex)
+            catch (System.Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    msg = "Falha na conexão",
-                    erro = ex.Message,
+                    Error = "Falha na transação",
+                    Message = ex.Message
                 });
-            }
-            catch (SqlException ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na sintaxe do código SQL",
-                    erro = ex.Message,
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na definição do código",
-                    erro = ex.Message
-                });
+
             }
         }
 
-        [HttpDelete]
+        /// <summary>
+        /// Altera um objeto no banco de dados conforme o Id. ATENÇÃO: NO JSON, COLOQUE O VALOR DOS "Id" CONFORME SEUS VALORES NO BANCO DE DADOS!
+        /// </summary>
+        /// <param name="id">Id do objeto a ser alterado</param>
+        /// <param name="evento">O objeto completado que substituirá o existente no banco de dados</param>
+        /// <returns>Objeto alterado</returns>
+        [HttpPut("{id}")]
+        public IActionResult Alterar(int id, Eventos evento)
+        {
+            try
+            {
+                var retorno = repositorio.GetById(id);
+
+                if (id != evento.Id)
+                {
+                    return BadRequest(new { Message = "O id indicado deve ser o mesmo id do paciente" });
+                }
+
+                if (retorno is null)
+                {
+                    return NotFound(new { Message = "Não foi encontrado um evento com esse Id." });
+                }
+
+                repositorio.Update(evento);
+
+                return Ok(evento);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "Falha na transação",
+                    Message = ex.Message
+                });
+
+            }
+        }
+
+        /// <summary>
+        /// Altera apenas informações específicas do objeto
+        /// </summary>
+        /// <param name="id">Id do objeto a ser alterado</param>
+        /// <param name="patch">Informações que serão alteradas no objeto destino</param>
+        /// <returns>Novo objeto com as alterações realizadas</returns>
+        [HttpPatch("{id}")]
+        public IActionResult AlterarParcialmente(int id, [FromBody] JsonPatchDocument patch)
+        {
+            try
+            {
+                if (patch is null)
+                {
+                    return BadRequest(new { Message = "Não houve alterações no objeto" });
+                }
+
+                var evento = repositorio.GetById(id);
+
+                if (evento is null)
+                {
+                    return NotFound(new { Message = "Não foi encontrado um evento com esse Id." });
+                }
+
+                repositorio.UpdateParcial(patch, evento);
+
+                return Ok(evento);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "Falha na transação",
+                    Message = ex.Message
+                });
+
+            }
+
+        }
+
+        /// <summary>
+        /// Deleta um objeto do banco de dados de acordo com o id informado
+        /// </summary>
+        /// <param name="id">Id do objeto a ser deletado</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
         public IActionResult Deletar(int id)
         {
             try
             {
-                var buscarEvento = repositorio.GetById(id);
+                var busca = repositorio.GetById(id);
 
-                if(buscarEvento == null)
+                if (busca is null)
                 {
-                    return NotFound();
+                    return NotFound(new { Message = "Não foi encontrado um evento com esse Id." });
                 }
 
-                repositorio.Delete(id);
-                return Ok(new
+                repositorio.Delete(busca);
+
+                return NoContent();
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new
                 {
-                    msg = "Evento excluído com sucesso"
+                    Error = "Falha na transação",
+                    Message = ex.Message
                 });
 
-            }
-            catch (InvalidOperationException ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na conexão",
-                    erro = ex.Message,
-                });
-            }
-            catch (SqlException ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na sintaxe do código SQL",
-                    erro = ex.Message,
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    msg = "Falha na definição do código",
-                    erro = ex.Message
-                });
             }
         }
     }
