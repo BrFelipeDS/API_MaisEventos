@@ -194,7 +194,7 @@ namespace APIMaisEventos.Controllers
 
                 repositorio.Delete(busca);
 
-                return NoContent();
+                return Ok(new { Message = "Evento excluído com sucesso" });
             }
             catch (System.Exception ex)
             {

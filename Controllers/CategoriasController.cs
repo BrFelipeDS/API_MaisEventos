@@ -198,7 +198,7 @@ namespace APIMaisEventos.Controllers
 
                 repositorio.Delete(busca);
 
-                return NoContent();
+                return Ok( new { Message = "Categoria excluída com sucesso"});
             }
             catch (System.Exception ex)
             {

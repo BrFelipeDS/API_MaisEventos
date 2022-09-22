@@ -195,7 +195,7 @@ namespace APIMaisEventos.Controllers
 
                 repositorio.Delete(busca);
 
-                return NoContent();
+                return Ok(new { Message = "Usuario/evento excluído com sucesso" });
             }
             catch (System.Exception ex)
             {
