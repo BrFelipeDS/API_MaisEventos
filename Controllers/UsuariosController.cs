@@ -2,6 +2,7 @@
 using APIMaisEventos.Models;
 using APIMaisEventos.Repositories;
 using APIMaisEventos.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,8 @@ namespace APIMaisEventos.Controllers
 
                 usuario.Imagem = uploadResultado;
                 #endregion
+
+                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
 
                 var retorno = repositorio.Insert(usuario);
                 return Ok(retorno);
@@ -151,6 +154,8 @@ namespace APIMaisEventos.Controllers
                 usuario.Imagem = uploadResultado;
                 #endregion
 
+                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
                 repositorio.Update(usuario);
 
                 return Ok(usuario);
@@ -210,6 +215,7 @@ namespace APIMaisEventos.Controllers
         /// </summary>
         /// <param name="id">Id do objeto a ser deletado</param>
         /// <returns></returns>
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Deletar(int id)
         {

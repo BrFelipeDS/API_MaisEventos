@@ -34,6 +34,8 @@ namespace APIMaisEventos
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<MaisEventosContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SqlServer")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
             services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -59,6 +61,34 @@ namespace APIMaisEventos
                 var xmlArquivo = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlArquivo));
 
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = @"Necessário token para autenticação.                                  
+                                    ExEmplo: 'Bearer 12345abcdef'",
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                          new OpenApiSecurityScheme
+                          {
+                              Reference = new OpenApiReference
+                              {
+                                  Type = ReferenceType.SecurityScheme,
+                                  Id = "Bearer"
+                              },
+                              Scheme = "oauth2",
+                              Name = "Bearer",
+                              In = ParameterLocation.Header,
+                          },
+                         new string[] {}
+                    }
+                });
+
             });
 
             services.AddTransient<MaisEventosContext, MaisEventosContext>();
@@ -66,6 +96,7 @@ namespace APIMaisEventos
             services.AddTransient<ICategoriasRepository, CategoriasRepository>();
             services.AddTransient<IUsuarioEventoRepository, UsuarioEventoRepository>();
             services.AddTransient<IEventosRepository, EventosRepository>();
+            services.AddTransient<ILoginRepository, LoginRepository>();
 
             services.AddDbContext<MaisEventosContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))
@@ -83,10 +114,10 @@ namespace APIMaisEventos
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("cripto-chave-autenticacao")),
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("MaisEventos-chave-autenticacao")),
                     ClockSkew = TimeSpan.FromMinutes(30),
-                    ValidIssuer = "cripto.webAPI",
-                    ValidAudience = "cripto.webAPI"
+                    ValidIssuer = "APIMaisEventos.webAPI",
+                    ValidAudience = "APIMaisEventos.webAPI"
                 };
             });
 
